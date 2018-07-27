@@ -9,28 +9,15 @@
 import UIKit
 import Alamofire
 
-
-//struct WeatherModelDecodable: Codable {
-//    let city: CityDecodable
-//    enum CodinKeys: String, CodingKey{
-//        case city = "city"
-//    }
-//}
-//
-//struct CityDecodable: Codable {
-//    let name: String
-//}
-//
 struct ModelDecodable: Codable {
     let code: Int?
     let lang: String?
     let text: [Text]?
-    enum CodinKeys: String, CodingKey {
-        case code = "code"
-        case lang = "lang"
-        case text = "text"
-    }
 }
+
+/*
+ {"code":200,"lang":"ru-en","text":["hi"]}
+ */
 
 struct Text: Codable{
     let text: String
@@ -86,23 +73,33 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @objc func translate(gesture: UIGestureRecognizer, completed : @escaping ()->()) {
         //let myText = ruTextField.text?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-        let urlString = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180724T104051Z.1663428093231832.ebdc3eea438a213931ad7b1d1c102add6ffa9f5e&text=привет&lang=ru-en"
-        if (gesture.view as? UIImageView) != nil {
-            Alamofire.request(urlString).validate().responseJSON { (response) in
-                let result = response.data
-                do {
-                    let decoder = JSONDecoder()
-                    print(response.result)
-                    self.model = try decoder.decode(ModelDecodable.self, from: result!)
-                    print(self.model?.lang ?? "")
-                } catch(let err) {
-                    print("error", err.localizedDescription)
-                }
-                DispatchQueue.main.async {
-                    completed()
-                }
+        let urlString = "https://translate.yandex.net/api/v1.5/tr/translate?lang=ru-en&key=trnsl.1.1.20180724T104051Z.1663428093231832.ebdc3eea438a213931ad7b1d1c102add6ffa9f5e"
+        
+            Alamofire.request(urlString, method: .post, parameters: ["text" : [ruTextField.text!]] ).responseJSON { response in
+            do {
+                let data = response.data
+                self.model = try JSONDecoder().decode(ModelDecodable.self, from: data!)
+                print(self.model?.lang ?? "")
+            } catch let e {
+                print(e)
             }
         }
+//        if (gesture.view as? UIImageView) != nil {
+//            Alamofire.request(urlString).validate().responseJSON { (response) in
+//                let result = response.data
+//                do {
+//                    let decoder = JSONDecoder()
+//                    print(response.result)
+//                    self.model = try decoder.decode(ModelDecodable.self, from: result!)
+//                    print(self.model?.lang ?? "")
+//                } catch(let err) {
+//                    print("error", err.localizedDescription)
+//                }
+//                DispatchQueue.main.async {
+//                    completed()
+//                }
+//            }
+//        }
 
     }
     
