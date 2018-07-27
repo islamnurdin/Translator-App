@@ -7,10 +7,40 @@
 //
 
 import UIKit
+import Alamofire
 
-class ViewController: UIViewController {
+
+//struct WeatherModelDecodable: Codable {
+//    let city: CityDecodable
+//    enum CodinKeys: String, CodingKey{
+//        case city = "city"
+//    }
+//}
+//
+//struct CityDecodable: Codable {
+//    let name: String
+//}
+//
+struct ModelDecodable: Codable {
+    let code: Int?
+    let lang: String?
+    let text: [Text]?
+    enum CodinKeys: String, CodingKey {
+        case code = "code"
+        case lang = "lang"
+        case text = "text"
+    }
+}
+
+struct Text: Codable{
+    let text: String
+    enum CodingKeys: String, CodingKey {
+        case text = "text"
+    }
+}
+
+class ViewController: UIViewController, UITextFieldDelegate {
     
-
     @IBOutlet weak var ruLabelView: UIView!
     @IBOutlet weak var enLabelView: UIView!
     @IBOutlet weak var ruTextField: UITextField!
@@ -18,52 +48,65 @@ class ViewController: UIViewController {
     @IBOutlet weak var translateButton: UIImageView!
     @IBOutlet weak var historyButton: UIButton!
     
+    var model: ModelDecodable?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
+        self.ruTextField.delegate = self
         navigationItem.title = "iTranslator"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ViewController.translate(gesture:completed:)))
+        translateButton.addGestureRecognizer(tapGesture)
+        translateButton.isUserInteractionEnabled = true
         
         ruLabelView.applyStylesViews()
         enLabelView.applyStylesViews()
         translateButton.applyStyleTranslate()
         historyButton.applyStyleButton()
-    }
 
+    }
+    
     @IBAction func openShit(_ sender: UIButton) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         let vc = sb.instantiateViewController(withIdentifier: "FViewController")
         navigationController?.pushViewController(vc, animated: true)
     }
-}
-
-extension UIView {
-    func applyStylesViews() {
-        self.layer.cornerRadius = 20
-        self.layer.shadowColor = UIColor(red:0.54, green:0.79, blue:0.79, alpha:1.0).cgColor
-        self.layer.shadowRadius = 4
-        self.layer.shadowOffset = CGSize(width: 0, height: 2)
-        self.layer.shadowOpacity = 0.5
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
-}
-
-extension UIImageView {
-    func applyStyleTranslate() {
-        self.layer.cornerRadius = self.frame.height / 2
-        self.layer.backgroundColor = UIColor(red:0.45, green:0.88, blue:0.88, alpha:1.0).cgColor
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        ruTextField.resignFirstResponder()
+        return true
     }
-}
+    
+    
+    @objc func translate(gesture: UIGestureRecognizer, completed : @escaping ()->()) {
+        //let myText = ruTextField.text?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        let urlString = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180724T104051Z.1663428093231832.ebdc3eea438a213931ad7b1d1c102add6ffa9f5e&text=привет&lang=ru-en"
+        if (gesture.view as? UIImageView) != nil {
+            Alamofire.request(urlString).validate().responseJSON { (response) in
+                let result = response.data
+                do {
+                    let decoder = JSONDecoder()
+                    print(response.result)
+                    self.model = try decoder.decode(ModelDecodable.self, from: result!)
+                    print(self.model?.lang ?? "")
+                } catch(let err) {
+                    print("error", err.localizedDescription)
+                }
+                DispatchQueue.main.async {
+                    completed()
+                }
+            }
+        }
 
-extension UIButton {
-    func applyStyleButton() {
-        self.backgroundColor = UIColor(red:0.45, green:0.88, blue:0.88, alpha:1.0)
-        self.layer.cornerRadius = 4
-        self.setTitle("Посмотреть историю", for: .normal)
-        self.setTitleColor(UIColor.white, for: .normal)
     }
+    
 }
-
-
 
 
 

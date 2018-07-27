@@ -25,8 +25,7 @@ class FViewController: UIViewController, UICollectionViewDataSource, UICollectio
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-        cell.russianTranslation.text = "русское слово"
-        cell.englishTranslation.text = "perevod na angl"
+        cell.englishTranslation.textColor = UIColor(red:0.45, green:0.88, blue:0.88, alpha:1.0)
         cell.cellView.applyStylesViews()
         
         return cell
@@ -34,7 +33,7 @@ class FViewController: UIViewController, UICollectionViewDataSource, UICollectio
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: collectionView.frame.size.width, height: collectionView.frame.size.height/3)
+        return CGSize(width: collectionView.frame.size.width, height: collectionView.frame.size.height/4.2)
     }
     
 }
