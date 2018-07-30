@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="q6h-P3-Q5H">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="q6h-P3-Q5H">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -35,10 +35,6 @@
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="russia.png" translatesAutoresizingMaskIntoConstraints="NO" id="kDS-cn-8lL">
                                 <rect key="frame" x="10" y="140" width="54" height="52"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="rotate.png" translatesAutoresizingMaskIntoConstraints="NO" id="4m5-hn-Bg4">
-                                <rect key="frame" x="190" y="217" width="52" height="52"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wZZ-q8-wbO">
@@ -72,13 +68,22 @@
                                         <color key="textColor" red="0.0" green="0.88235294119999996" blue="0.88235294119999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="speaker.png" translatesAutoresizingMaskIntoConstraints="NO" id="tp6-if-h44">
-                                        <rect key="frame" x="287" y="40" width="23" height="24"/>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ef9-Vx-HBt">
+                                        <rect key="frame" x="290" y="43" width="24" height="24"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
+                                        <state key="normal" image="speaker.png"/>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cvf-nv-ku5">
+                                <rect key="frame" x="187" y="225" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="rotate.png"/>
+                                <connections>
+                                    <action selector="translateButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pmo-Ku-01p"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.89803921568627454" green="0.89803921568627454" blue="0.89803921568627454" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -95,7 +100,7 @@
                         <outlet property="historyButton" destination="hyx-ne-G7l" id="SDe-BO-o4w"/>
                         <outlet property="ruLabelView" destination="wZZ-q8-wbO" id="h0q-bC-hSR"/>
                         <outlet property="ruTextField" destination="waZ-T6-LlG" id="O3v-hA-RDJ"/>
-                        <outlet property="translateButton" destination="4m5-hn-Bg4" id="DPI-fV-G3u"/>
+                        <outlet property="translateButton" destination="cvf-nv-ku5" id="DIi-tH-69z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -143,20 +148,23 @@
                                                             <color key="textColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="speaker.png" translatesAutoresizingMaskIntoConstraints="NO" id="sih-AI-4gD">
-                                                            <rect key="frame" x="342" y="113" width="24" height="24"/>
-                                                        </imageView>
                                                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fGT-dh-xAc">
                                                             <rect key="frame" x="51" y="72" width="273" height="1"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <color key="backgroundColor" red="0.85490196078431369" green="0.85490196078431369" blue="0.85490196078431369" alpha="1" colorSpace="calibratedRGB"/>
                                                         </view>
+                                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HgQ-gd-2y5">
+                                                            <rect key="frame" x="342" y="113" width="24" height="24"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <state key="normal" image="speaker.png"/>
+                                                            <connections>
+                                                                <action selector="speechButton:" destination="4wS-Pb-ELG" eventType="touchUpInside" id="Ggf-MJ-G2b"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="SDr-6e-o1n" secondAttribute="trailing" id="3eD-5J-OZY"/>
-                                                        <constraint firstAttribute="trailing" secondItem="sih-AI-4gD" secondAttribute="trailing" constant="8" id="FzF-6V-ZNO"/>
-                                                        <constraint firstAttribute="bottom" secondItem="sih-AI-4gD" secondAttribute="bottom" constant="8" id="Syp-Me-hOj"/>
                                                         <constraint firstItem="SDr-6e-o1n" firstAttribute="leading" secondItem="aqx-Sf-ZGK" secondAttribute="leading" id="VBC-NL-L8I"/>
                                                         <constraint firstItem="SDr-6e-o1n" firstAttribute="top" secondItem="aqx-Sf-ZGK" secondAttribute="top" constant="28" id="lz4-eT-pTs"/>
                                                     </constraints>

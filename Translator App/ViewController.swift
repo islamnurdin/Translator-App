@@ -8,22 +8,10 @@
 
 import UIKit
 import Alamofire
+import AVFoundation
 
-struct ModelDecodable: Codable {
-    let code: Int?
-    let lang: String?
-    let text: [Text]?
-}
-
-/*
- {"code":200,"lang":"ru-en","text":["hi"]}
- */
-
-struct Text: Codable{
-    let text: String
-    enum CodingKeys: String, CodingKey {
-        case text = "text"
-    }
+struct ModelDecodable: Decodable {
+    let text: [String]
 }
 
 class ViewController: UIViewController, UITextFieldDelegate {
@@ -32,25 +20,23 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var enLabelView: UIView!
     @IBOutlet weak var ruTextField: UITextField!
     @IBOutlet weak var enLabel: UILabel!
-    @IBOutlet weak var translateButton: UIImageView!
+    @IBOutlet weak var translateButton: UIButton!
     @IBOutlet weak var historyButton: UIButton!
     
     var model: ModelDecodable?
     
+    var copiedTexts: HistoryObject = HistoryObject()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-    
         self.ruTextField.delegate = self
+        
         navigationItem.title = "iTranslator"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ViewController.translate(gesture:completed:)))
-        translateButton.addGestureRecognizer(tapGesture)
-        translateButton.isUserInteractionEnabled = true
-        
+
         ruLabelView.applyStylesViews()
         enLabelView.applyStylesViews()
-        translateButton.applyStyleTranslate()
+        translateButton.applyStyleButton()
         historyButton.applyStyleButton()
 
     }
@@ -61,6 +47,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    @IBAction func translateButtonClicked(_ sender: UIButton) {
+        translate{
+            print("translated")
+        }
+        copiedTexts.wordsInEnglish.append(self.enLabel.text!)
+        copiedTexts.wordsInRussian.append(self.ruTextField.text!)
+        
+        print("\(copiedTexts.wordsInRussian.count) - \(copiedTexts.wordsInRussian.count)")
+
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
@@ -69,43 +66,39 @@ class ViewController: UIViewController, UITextFieldDelegate {
         ruTextField.resignFirstResponder()
         return true
     }
-    
-    
-    @objc func translate(gesture: UIGestureRecognizer, completed : @escaping ()->()) {
-        //let myText = ruTextField.text?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-        let urlString = "https://translate.yandex.net/api/v1.5/tr/translate?lang=ru-en&key=trnsl.1.1.20180724T104051Z.1663428093231832.ebdc3eea438a213931ad7b1d1c102add6ffa9f5e"
-        
-            Alamofire.request(urlString, method: .post, parameters: ["text" : [ruTextField.text!]] ).responseJSON { response in
+
+    func translate(completed : @escaping ()->()) {
+        let myText = ruTextField.text?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        let urlString = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180724T104051Z.1663428093231832.ebdc3eea438a213931ad7b1d1c102add6ffa9f5e&text=\(myText ?? "")&lang=ru-en"
+        let url = URL(string: urlString)
+        Alamofire.request(url!).validate().responseJSON { (response) in
+            let data = response.data
             do {
-                let data = response.data
-                self.model = try JSONDecoder().decode(ModelDecodable.self, from: data!)
-                print(self.model?.lang ?? "")
+                let decoder = JSONDecoder()
+                self.model = try decoder.decode(ModelDecodable.self, from: data!)
+                self.enLabel.text = self.model?.text.first
+                DispatchQueue.main.async {
+                    completed()
+                }
             } catch let e {
                 print(e)
             }
         }
-//        if (gesture.view as? UIImageView) != nil {
-//            Alamofire.request(urlString).validate().responseJSON { (response) in
-//                let result = response.data
-//                do {
-//                    let decoder = JSONDecoder()
-//                    print(response.result)
-//                    self.model = try decoder.decode(ModelDecodable.self, from: result!)
-//                    print(self.model?.lang ?? "")
-//                } catch(let err) {
-//                    print("error", err.localizedDescription)
-//                }
-//                DispatchQueue.main.async {
-//                    completed()
-//                }
-//            }
-//        }
-
     }
     
+    @IBAction func speechButton(_ sender: UIButton) {
+        self.readText(text: enLabel.text!, lang: "en-US")
+        
+    }
+    func readText(text: String, lang: String) {
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: lang)
+        utterance.rate = 0.5
+        
+        let synthesizer = AVSpeechSynthesizer()
+        synthesizer.speak(utterance)
+    }
 }
-
-
 
 
 
