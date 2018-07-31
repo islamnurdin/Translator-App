@@ -24,38 +24,36 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var historyButton: UIButton!
     
     var model: ModelDecodable?
-    
-    var copiedTexts: HistoryObject = HistoryObject()
+    var ruTranslatedWordsArray: [String] = []
+    var enTranslatedWordsArray: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.ruTextField.delegate = self
-        
         navigationItem.title = "iTranslator"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
 
         ruLabelView.applyStylesViews()
         enLabelView.applyStylesViews()
-        translateButton.applyStyleButton()
+        translateButton.layer.cornerRadius = translateButton.frame.height / 2
+        translateButton.layer.backgroundColor = UIColor(red:0.45, green:0.88, blue:0.88, alpha:1.0).cgColor
         historyButton.applyStyleButton()
-
     }
     
     @IBAction func openShit(_ sender: UIButton) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "FViewController")
-        navigationController?.pushViewController(vc, animated: true)
+        let vc = sb.instantiateViewController(withIdentifier: "FViewController") as? FViewController
+        
+        //vc?.ruTranslatedWordsArray = ruTranslatedWordsArray
+        //vc?.enTranslatedWordsArray = enTranslatedWordsArray
+        navigationController?.pushViewController(vc!, animated: true)
+
     }
     
     @IBAction func translateButtonClicked(_ sender: UIButton) {
         translate{
             print("translated")
         }
-        copiedTexts.wordsInEnglish.append(self.enLabel.text!)
-        copiedTexts.wordsInRussian.append(self.ruTextField.text!)
-        
-        print("\(copiedTexts.wordsInRussian.count) - \(copiedTexts.wordsInRussian.count)")
-
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -76,7 +74,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
             do {
                 let decoder = JSONDecoder()
                 self.model = try decoder.decode(ModelDecodable.self, from: data!)
+                
                 self.enLabel.text = self.model?.text.first
+                self.ruTranslatedWordsArray.append(self.ruTextField.text!)
+                self.enTranslatedWordsArray.append(self.enLabel.text!)
+                
+                let userDefaults = UserDefaults.standard
+                
+                for item in self.ruTranslatedWordsArray {
+                    userDefaults.set(item, forKey: "ruWords")
+                }
+                for item1 in self.enTranslatedWordsArray {
+                    userDefaults.set(item1, forKey: "enWords")
+                }
+                
                 DispatchQueue.main.async {
                     completed()
                 }
@@ -98,6 +109,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let synthesizer = AVSpeechSynthesizer()
         synthesizer.speak(utterance)
     }
+    
+  
 }
 
 

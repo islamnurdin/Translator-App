@@ -11,23 +11,33 @@ import UIKit
 
 class FViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
 
-    var vc = ViewController()
     
+    var ruTranslatedWordsArray: [String] = []
+    var enTranslatedWordsArray: [String] = []
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(vc.copiedTexts.wordsInEnglish.count)
         navigationItem.title = "iTranslator"
+        
+        let userDefaults = UserDefaults.standard
+        ruTranslatedWordsArray.append(userDefaults.string(forKey: "ruWords")!)
+        print("RURURURURURU \(userDefaults.string(forKey: "ruWords"))")
+        print("ENENENENENEN \(userDefaults.string(forKey: "enWords"))")
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return vc.copiedTexts.wordsInEnglish.count
+        return ruTranslatedWordsArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
-        cell.englishTranslation.textColor = UIColor(red:0.45, green:0.88, blue:0.88, alpha:1.0)
         
-        //cell.englishTranslation.text = vc.arr[indexPath.row]
+        cell.englishTranslation.textColor = UIColor(red:0.45, green:0.88, blue:0.88, alpha:1.0)
+        cell.russianTranslation.textColor = .black
+        
+        let userDefaults = UserDefaults.standard
+        cell.englishTranslation.text = userDefaults.string(forKey: "ruWords")
+        cell.russianTranslation.text = userDefaults.string(forKey: "enWords")
         cell.cellView.applyStylesViews()
         
         return cell

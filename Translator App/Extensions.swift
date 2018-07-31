@@ -20,13 +20,6 @@ extension UIView {
     }
 }
 
-extension UIImageView {
-    func applyStyleTranslate() {
-        self.layer.cornerRadius = self.frame.height / 2
-        self.layer.backgroundColor = UIColor(red:0.45, green:0.88, blue:0.88, alpha:1.0).cgColor
-    }
-}
-
 extension UIButton {
     func applyStyleButton() {
         self.backgroundColor = UIColor(red:0.45, green:0.88, blue:0.88, alpha:1.0)
