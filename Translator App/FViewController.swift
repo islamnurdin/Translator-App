@@ -5,27 +5,23 @@
 //  Created by ITLabAdmin on 7/24/18.
 //  Copyright © 2018 ITLabAdmin. All rights reserved.
 //
-
-import Foundation
 import UIKit
 
 class FViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
-
     
-    var ruTranslatedWordsArray: [String] = []
-    var enTranslatedWordsArray: [String] = []
-        
+      var ruTranslatedWordsArray: [String] = []
+//    var enTranslatedWordsArray: [String] = []
+//
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "iTranslator"
-        
-        let userDefaults = UserDefaults.standard
-        ruTranslatedWordsArray.append(userDefaults.string(forKey: "ruWords")!)
-        print("RURURURURURU \(userDefaults.string(forKey: "ruWords"))")
-        print("ENENENENENEN \(userDefaults.string(forKey: "enWords"))")
+        ruTranslatedWordsArray = UserDefaults.standard.stringArray(forKey: "ruwords")!
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if ruTranslatedWordsArray == nil {
+            return 0
+        }
         return ruTranslatedWordsArray.count
     }
     
@@ -34,10 +30,9 @@ class FViewController: UIViewController, UICollectionViewDataSource, UICollectio
         
         cell.englishTranslation.textColor = UIColor(red:0.45, green:0.88, blue:0.88, alpha:1.0)
         cell.russianTranslation.textColor = .black
-        
         let userDefaults = UserDefaults.standard
-        cell.englishTranslation.text = userDefaults.string(forKey: "ruWords")
-        cell.russianTranslation.text = userDefaults.string(forKey: "enWords")
+        cell.englishTranslation.text = userDefaults.stringArray(forKey: "enwords")?[indexPath.row]
+        cell.russianTranslation.text = userDefaults.stringArray(forKey: "ruwords")?[indexPath.row]
         cell.cellView.applyStylesViews()
         
         return cell

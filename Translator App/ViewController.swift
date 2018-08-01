@@ -43,17 +43,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBAction func openShit(_ sender: UIButton) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         let vc = sb.instantiateViewController(withIdentifier: "FViewController") as? FViewController
-        
-        //vc?.ruTranslatedWordsArray = ruTranslatedWordsArray
-        //vc?.enTranslatedWordsArray = enTranslatedWordsArray
         navigationController?.pushViewController(vc!, animated: true)
-
     }
     
     @IBAction func translateButtonClicked(_ sender: UIButton) {
         translate{
             print("translated")
         }
+
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -76,17 +73,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 self.model = try decoder.decode(ModelDecodable.self, from: data!)
                 
                 self.enLabel.text = self.model?.text.first
+                
                 self.ruTranslatedWordsArray.append(self.ruTextField.text!)
                 self.enTranslatedWordsArray.append(self.enLabel.text!)
                 
-                let userDefaults = UserDefaults.standard
-                
-                for item in self.ruTranslatedWordsArray {
-                    userDefaults.set(item, forKey: "ruWords")
-                }
-                for item1 in self.enTranslatedWordsArray {
-                    userDefaults.set(item1, forKey: "enWords")
-                }
+                self.getArray(ruText: self.ruTextField.text!, enText: self.enLabel.text!)
                 
                 DispatchQueue.main.async {
                     completed()
@@ -110,7 +101,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
         synthesizer.speak(utterance)
     }
     
-  
+    func getArray(ruText: String, enText: String) {
+        let userDefaults = UserDefaults.standard
+        
+        if userDefaults.stringArray(forKey: "ruwords") == nil {
+            userDefaults.set(self.ruTranslatedWordsArray, forKey: "ruwords")
+            userDefaults.set(self.enTranslatedWordsArray, forKey: "enwords")
+        } else{
+            var ruArray = userDefaults.stringArray(forKey: "ruwords")
+            ruArray?.append(ruText)
+            ruArray?.reverse()
+            userDefaults.set(ruArray, forKey: "ruwords")
+        
+            var enArray = userDefaults.stringArray(forKey: "enwords")
+            enArray?.append(enText)
+            enArray?.reverse()
+            userDefaults.set(enArray, forKey: "enwords")
+        }
+    }
 }
 
 
