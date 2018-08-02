@@ -41,9 +41,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func openShit(_ sender: UIButton) {
-        let sb = UIStoryboard(name: "Main", bundle: nil)
-        let vc = sb.instantiateViewController(withIdentifier: "FViewController") as? FViewController
-        navigationController?.pushViewController(vc!, animated: true)
+        let userDefaults = UserDefaults.standard
+        if userDefaults.stringArray(forKey: "ruwords") != nil {
+            let sb = UIStoryboard(name: "Main", bundle: nil)
+            let vc = sb.instantiateViewController(withIdentifier: "FViewController") as? FViewController
+            navigationController?.pushViewController(vc!, animated: true)
+        } else {
+            let alert = UIAlertController(title: "Хей!", message: "Там ничего нет. Переведи что-то.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Окай", style: .default, handler: nil))
+            self.present(alert, animated: true)
+        }
     }
     
     @IBAction func translateButtonClicked(_ sender: UIButton) {
@@ -88,9 +95,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+
     @IBAction func speechButton(_ sender: UIButton) {
         self.readText(text: enLabel.text!, lang: "en-US")
-        
     }
     func readText(text: String, lang: String) {
         let utterance = AVSpeechUtterance(string: text)

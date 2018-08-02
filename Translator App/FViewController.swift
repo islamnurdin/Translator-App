@@ -15,14 +15,10 @@ class FViewController: UIViewController, UICollectionViewDataSource, UICollectio
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "iTranslator"
-        ruTranslatedWordsArray = UserDefaults.standard.stringArray(forKey: "ruwords")!
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if ruTranslatedWordsArray == nil {
-            return 0
-        }
-        return ruTranslatedWordsArray.count
+        return  UserDefaults.standard.stringArray(forKey: "ruwords")!.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
